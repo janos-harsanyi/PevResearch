@@ -3,6 +3,12 @@
 <head>
 <meta charset="utf-8">
 <title>pev_research</title>
+<style>
+a, a:visited {
+    color: black;
+    text-decoration: none;
+}
+</style>
 </head>
 <body>
 <script>
@@ -85,8 +91,22 @@
             var pev = pevs[pevName];
             
             var tr = document.createElement('tr');
+            tr.setAttribute('id', pevName);
+            
+            var pevType = pev['Type'];
+            var isPevPlaceholder = pevType === 'Placeholder';
+            
             var td = document.createElement('td');
-            td.innerHTML = pevName;
+            if (isPevPlaceholder) {
+                var strong = document.createElement('strong');
+                strong.innerHTML = pevName;
+                td.appendChild(strong);
+            } else {
+                var anchor = document.createElement('a');
+                anchor.setAttribute('href', '#' + pevName);
+                anchor.innerHTML = pevName;
+                td.appendChild(anchor);
+            }
             tr.appendChild(td);
             
             for (var propertyName in pev) {
