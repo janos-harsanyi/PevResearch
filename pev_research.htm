@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>pev_research</title>
+</head>
+<body>
+<script>
+	/*
+	 * Written by xPaw
+	 *
+	 * This is a cut out version of http://xpaw.ru/pev_research.php
+	 * This should be enough to get data from GitHub and display it
+	 *
+	 * GitHub: https://github.com/xPaw/PevResearch
+	 */
+	
+	var pevsUrl = 'pev_research.json';
+    
+    var request = new XMLHttpRequest();
+    request.open('GET', pevsUrl, true);
+    request.onload = function() {
+        if (this.status >= 200 && this.status < 400) {
+            var pevs = JSON.parse(this.response);
+            appendHTMLTableToBodyFromPevsJson(pevs);
+        }
+    };
+    request.send();
+    
+    function appendHTMLTableToBodyFromPevsJson(pevs) {
+        var table = createHTMLTableFromPevsJson(pevs);
+        table.setAttribute('border', '1');
+        
+        document.body.appendChild(table);
+    }
+    
+    function createHTMLTableFromPevsJson(pevs) {
+        var table = document.createElement('table');
+        
+        var pevExample = getFirstOwnPropertyValue(pevs);
+        appendHTMLTableHeaderFromPevExample(table, pevExample);
+        
+        appendHTMLTableBodyFromPevJson(table, pevs);
+        
+        return table;
+    }
+    
+    function getFirstOwnPropertyValue(pevs) {
+        for (var propertyName in pevs) {
+            if (pevs.hasOwnProperty(propertyName)) {
+                return pevs[propertyName];
+            }
+        }
+        return null;
+    }
+    
+    function appendHTMLTableHeaderFromPevExample(table, pevExample) {
+        var thead = document.createElement('thead');
+        var tr = document.createElement('tr');
+        
+        var th = document.createElement('th');
+        th.innerHTML = 'Variable';
+        tr.appendChild(th);
+        
+        for (var propertyName in pevExample) {
+            if (!pevExample.hasOwnProperty(propertyName)) {
+                continue;
+            }
+            th = document.createElement('th');
+            th.innerHTML = propertyName;
+            tr.appendChild(th);
+        }
+        
+        thead.appendChild(tr);
+        table.appendChild(thead);
+    }
+    
+    function appendHTMLTableBodyFromPevJson(table, pevs) {
+        var tbody = document.createElement('tbody');
+        
+        for (var pevName in pevs) {
+            if (!pevs.hasOwnProperty(pevName)) {
+                continue;
+            }
+            var pev = pevs[pevName];
+            
+            var tr = document.createElement('tr');
+            var td = document.createElement('td');
+            td.innerHTML = pevName;
+            tr.appendChild(td);
+            
+            for (var propertyName in pev) {
+                if (!pev.hasOwnProperty(propertyName)) {
+                    continue;
+                }
+                td = document.createElement('td');
+                td.innerHTML = pev[propertyName];
+                tr.appendChild(td);
+            }
+            tbody.appendChild(tr);
+        }
+        
+        tbody.appendChild(tr);
+        table.appendChild(tbody);
+    }
+</script>
+</body>
+</html>
